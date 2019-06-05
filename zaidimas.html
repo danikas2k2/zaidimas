@@ -1,0 +1,113 @@
+<style>
+    #laukas {
+        width: 90vmin;
+        height: 90vmin;
+        display: flex;
+        flex-wrap: wrap;
+        margin: auto;
+    }
+    
+    #info {
+        width: 90vmin;
+        height: 6vmin;
+        font-size: 4vmin;
+        display: flex;
+        justify-content: space-between;
+        margin: auto;
+    }
+    
+    .langelis {
+        width: 9vmin;
+        height: 9vmin;
+        flex: 0 0 9vmin;
+        animation: transform 10s;
+    }
+    
+    .pilkas {
+        background-color: lightgray;
+    }
+    
+    .raudonas {
+        background-color: lightgreen;
+        transform: rotate(90deg);
+    }
+    
+    .zombis {
+        /* background-image: url(https://www.svgrepo.com/show/115016/zombie.svg); */
+        background-image: url(https://www.svgrepo.com/show/193606/zombie.svg);
+    }
+</style>
+
+<script>
+    function zaidimas() {
+        let laukas = document.getElementById('laukas');
+
+        let langeliai = [];
+
+        for (let n = 0; n < 100; n = n + 1) {
+            let langelis = document.createElement('div');
+            langelis.classList.add('langelis');
+            // langelis.innerText = n;
+            laukas.append(langelis);
+
+            let eilute = Math.floor(n / 10);
+            if (n % 2 == eilute % 2) {
+                langelis.classList.add('pilkas');
+            }
+
+            langeliai[n] = langelis;
+        }
+
+        let zombiai = document.getElementById('zombiai');
+        let likoZombiu = 10;
+        zombiai.textContent = likoZombiu;
+
+        let laikas = document.getElementById('laikas');
+        let likoLaiko = 10;
+        laikas.textContent = likoLaiko;
+
+        let i = setInterval(tiksim, 1000);
+
+        function tiksim() {
+            likoLaiko = likoLaiko - 1;
+            laikas.textContent = likoLaiko;
+
+            if (likoLaiko == 0) {
+                if (likoZombiu > 0) {
+                    laikas.textContent = 'Pralaimėjai :(';
+                }
+                clearInterval(i);
+            }
+        }
+
+        for (let a = 0; a < likoZombiu;) {
+            let zombis = Math.floor(Math.random() * 100);
+            let langelis = langeliai[zombis];
+            if (!langelis.classList.contains('zombis')) {
+                a = a + 1;
+                langelis.classList.add('zombis');
+
+                langelis.onclick = function() {
+                    if (!langelis.classList.contains('raudonas') && likoLaiko) {
+                        langelis.classList.add('raudonas');
+                        likoZombiu = likoZombiu - 1;
+                        zombiai.textContent = likoZombiu;
+
+                        if (likoZombiu == 0) {
+                            zombiai.textContent = 'Laimėjai! :)';
+                            clearInterval(i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<body onload=zaidimas()>
+    <div id=info>
+        <div id=zombiai></div>
+        <div id=laikas></div>
+    </div>
+    <div id=laukas></div>
+</body>
