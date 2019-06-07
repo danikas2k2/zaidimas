@@ -4,36 +4,70 @@
         height: 90vmin;
         display: flex;
         flex-wrap: wrap;
-        margin: auto;
+        margin: 1vmin auto 0;
     }
     
     #info {
         width: 90vmin;
-        height: 6vmin;
+        height: 5vmin;
         font-size: 4vmin;
+        padding: 0 1vmin;
         display: flex;
         justify-content: space-between;
         margin: auto;
+    }
+    
+    #mygtukai {
+        width: 90vmin;
+        height: 5vmin;
+        font-size: 4vmin;
+        padding: 0 1vmin;
+        display: flex;
+        justify-content: space-between;
+        margin: auto;
+    }
+    
+    #mygtukai button {
+        width: 10vmin;
+        height: 4vmin;
+        border-radius: 1vmin;
+        font-size: 2vmin;
+        cursor: pointer;
+    }
+    
+    #mygtukai button:nth-child(1):hover {
+        background-color: lightgreen;
+    }
+    
+    #mygtukai button:nth-child(2):hover {
+        background-color: lightgoldenrodyellow;
+    }
+    
+    #mygtukai button:nth-child(3):hover {
+        background-color: lightpink;
+    }
+    
+    .laimejau {
+        background-color: lightgreen;
+    }
+    
+    .pralaimejau {
+        background-color: lightpink;
     }
     
     .langelis {
         width: 9vmin;
         height: 9vmin;
         flex: 0 0 9vmin;
-        animation: transform 10s;
     }
     
     .pilkas {
         background-color: lightgray;
     }
     
-    .nukautas {
-        background-color: lightgreen;
-        transform: rotate(90deg);
-    }
-    
-    .liko {
-        background-color: lightpink;
+    .zombis {
+        cursor: pointer;
+        transition: transform .5s;
     }
     
     .zombis1 {
@@ -43,11 +77,33 @@
     .zombis2 {
         background-image: url(zombis2.svg);
     }
+    
+    .nukautas {
+        cursor: default;
+        background-color: lightgreen;
+        transform: rotate(45deg);
+        border-radius: 50%;
+        overflow: hidden;
+    }
+    
+    .liko {
+        cursor: default;
+        background-color: lightpink;
+        border-radius: 50%;
+        overflow: hidden;
+    }
 </style>
 
 <script>
-    function zaidimas() {
+    let i;
+
+    function zaidimas(zaidimoLaikas) {
         let laukas = document.getElementById('laukas');
+        laukas.innerText = '';
+
+        let info = document.getElementById('info');
+        info.classList.remove('laimejau', 'pralaimejau');
+
         let langeliai = [];
 
         let zombiai = document.getElementById('zombiai');
@@ -55,7 +111,7 @@
         let likoZombiu = 10;
 
         let laikas = document.getElementById('laikas');
-        let likoLaiko = 10;
+        let likoLaiko = zaidimoLaikas;
 
         for (let n = 0; n < 100; n = n + 1) {
             let langelis = document.createElement('div');
@@ -73,7 +129,8 @@
         zombiai.textContent = likoZombiu;
         laikas.textContent = likoLaiko;
 
-        let i = setInterval(tiksim, 1000);
+        clearInterval(i);
+        i = setInterval(tiksim, 1000);
 
         function tiksim() {
             likoLaiko = likoLaiko - 1;
@@ -82,6 +139,7 @@
             if (likoLaiko == 0) {
                 if (likoZombiu > 0) {
                     laikas.textContent = 'Pralaimėjai :(';
+                    info.classList.add('pralaimejau');
 
                     for (let langelis of zombiuLangeliai) {
                         if (!langelis.classList.contains('nukautas')) {
@@ -97,9 +155,9 @@
             let zombis = Math.floor(Math.random() * 2) % 2 + 1;
             let kurZombis = Math.floor(Math.random() * 100) % 100;
             let langelis = langeliai[kurZombis];
-            if (!langelis.classList.contains('zombis' + zombis)) {
+            if (!langelis.classList.contains('zombis')) {
                 zombiuLangeliai[z] = langelis;
-                langelis.classList.add('zombis' + zombis);
+                langelis.classList.add('zombis', 'zombis' + zombis);
                 z = z + 1;
 
                 langelis.onclick = function() {
@@ -110,6 +168,7 @@
 
                         if (likoZombiu == 0) {
                             zombiai.textContent = 'Laimėjai! :)';
+                            info.classList.add('laimejau');
                             clearInterval(i);
                         }
                     }
@@ -119,7 +178,12 @@
     }
 </script>
 
-<body onload=zaidimas()>
+<body onload=zaidimas(10)>
+    <div id=mygtukai>
+        <button onclick=zaidimas(15)>Lengvai</button>
+        <button onclick=zaidimas(10)>Normaliai</button>
+        <button onclick=zaidimas(5)>Sunkiai</button>
+    </div>
     <div id=info>
         <div id=zombiai></div>
         <div id=laikas></div>
