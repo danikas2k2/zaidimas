@@ -1,3 +1,3 @@
-# zaidimas vaikams
+# zaidimas penktokams
 
 ![vaizdas](zaidimas.png)
