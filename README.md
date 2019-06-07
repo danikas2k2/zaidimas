@@ -1,3 +1,3 @@
 # zaidimas penktokams
 
-[![vaizdas](zaidimas.png)](./index.html)
+![vaizdas](zaidimas.png)
