@@ -9,9 +9,9 @@
     
     #info {
         width: 90vmin;
-        height: 5vmin;
-        font-size: 4vmin;
-        padding: 0 1vmin;
+        height: 4vmin;
+        font-size: 3vmin;
+        padding: 0.5vmin 1vmin;
         display: flex;
         justify-content: space-between;
         margin: auto;
@@ -19,9 +19,9 @@
     
     #mygtukai {
         width: 90vmin;
-        height: 5vmin;
+        height: 4vmin;
         font-size: 4vmin;
-        padding: 0 1vmin;
+        padding: 0 1vmin 1vmin;
         display: flex;
         justify-content: space-between;
         margin: auto;
@@ -66,15 +66,16 @@
     }
     
     .zombis {
-        cursor: pointer;
         transition: transform .5s;
     }
     
     .zombis1 {
+        cursor: pointer;
         background-image: url(zombis1.svg);
     }
     
     .zombis2 {
+        cursor: pointer;
         background-image: url(zombis2.svg);
     }
     
@@ -141,9 +142,11 @@
                     laikas.textContent = 'Pralaimėjai :(';
                     info.classList.add('pralaimejau');
 
-                    for (let langelis of zombiuLangeliai) {
+                    for (let z = likoZombiu - 1; z >= 0; z--) {
+                        let langelis = zombiuLangeliai[z];
+                        let zombis = zombioTipas(langelis);
                         if (!langelis.classList.contains('nukautas')) {
-                            langelis.classList.add('liko');
+                            langelis.classList.add('liko', zombis);
                         }
                     }
                 }
@@ -157,11 +160,15 @@
             let langelis = langeliai[kurZombis];
             if (!langelis.classList.contains('zombis')) {
                 zombiuLangeliai[z] = langelis;
-                langelis.classList.add('zombis', 'zombis' + zombis);
+                langelis.dataset.zombis = zombis;
+                langelis.classList.add('zombis');
                 z = z + 1;
 
                 langelis.onclick = function() {
-                    if (!langelis.classList.contains('nukautas') && likoLaiko) {
+                    let zombis = zombioTipas(langelis);
+                    if (likoLaiko &&
+                        langelis.classList.contains(zombis) &&
+                        !langelis.classList.contains('nukautas')) {
                         langelis.classList.add('nukautas');
                         likoZombiu = likoZombiu - 1;
                         zombiai.textContent = likoZombiu;
@@ -170,10 +177,24 @@
                             zombiai.textContent = 'Laimėjai! :)';
                             info.classList.add('laimejau');
                             clearInterval(i);
+                        } else {
+                            rodomZombi(likoZombiu);
                         }
                     }
                 }
             }
+        }
+
+        rodomZombi(likoZombiu);
+
+        function zombioTipas(langelis) {
+            return 'zombis' + langelis.dataset.zombis;
+        }
+
+        function rodomZombi(z) {
+            let langelis = zombiuLangeliai[z - 1];
+            let zombis = zombioTipas(langelis);
+            langelis.classList.add(zombis);
         }
     }
 </script>
